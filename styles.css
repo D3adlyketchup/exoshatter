@@ -1,0 +1,129 @@
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --bg: #05070d;
+  --fg: #eef2f8;
+  --muted: #8a95ab;
+  --primary: #22d3ee;
+  --accent: #34e0a1;
+  --border: rgba(255,255,255,0.08);
+  --card: rgba(255,255,255,0.03);
+}
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "DM Sans", system-ui, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+#particles {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+main, .site-header, footer { position: relative; z-index: 1; }
+
+.site-header {
+  display: flex; justify-content: space-between; align-items: center;
+  max-width: 1200px; margin: 0 auto; padding: 24px 32px;
+}
+.logo {
+  font-family: "Orbitron", sans-serif; font-weight: 900;
+  letter-spacing: 0.2em; font-size: 18px;
+}
+.logo span { color: var(--primary); }
+nav a {
+  color: var(--muted); text-decoration: none; margin-left: 32px;
+  font-size: 14px; font-weight: 500; transition: color .2s;
+}
+nav a:hover { color: var(--fg); }
+
+.hero {
+  text-align: center; padding: 80px 24px 120px;
+  max-width: 900px; margin: 0 auto;
+  background: radial-gradient(circle at 50% 0%, rgba(34,211,238,0.12), transparent 60%);
+}
+.hero h1 {
+  font-family: "Orbitron", sans-serif; font-weight: 900;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 0.95; margin: 0;
+}
+.glow {
+  color: var(--primary);
+  text-shadow: 0 0 20px rgba(34,211,238,0.6), 0 0 40px rgba(34,211,238,0.4), 0 0 80px rgba(34,211,238,0.2);
+}
+.hero p {
+  color: var(--muted); font-size: 1.2rem; max-width: 620px;
+  margin: 24px auto 0;
+}
+.cta { margin-top: 40px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-block; padding: 14px 28px; border-radius: 10px;
+  text-decoration: none; font-weight: 600; font-size: 15px;
+  transition: transform .2s, box-shadow .2s, background .2s;
+}
+.btn-primary {
+  background: var(--primary); color: #05070d;
+  box-shadow: 0 0 20px rgba(34,211,238,0.4), 0 0 40px rgba(34,211,238,0.2);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(34,211,238,0.6), 0 0 60px rgba(34,211,238,0.3); }
+.btn-outline {
+  border: 1px solid rgba(34,211,238,0.4); color: var(--fg);
+}
+.btn-outline:hover { background: rgba(34,211,238,0.1); border-color: rgba(34,211,238,0.7); }
+
+.about {
+  max-width: 1100px; margin: 0 auto; padding: 80px 32px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+}
+.about h2 {
+  font-family: "Orbitron", sans-serif; font-size: 2rem; margin: 0 0 16px;
+}
+.about p { color: var(--muted); line-height: 1.7; }
+.about-visual {
+  aspect-ratio: 1; border-radius: 20px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(34,211,238,0.6), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(52,224,161,0.4), transparent 60%),
+    linear-gradient(135deg, #0a1220, #050810);
+  border: 1px solid var(--border);
+  box-shadow: 0 0 60px rgba(34,211,238,0.15);
+}
+@media (max-width: 768px) {
+  .about { grid-template-columns: 1fr; }
+}
+
+.features {
+  max-width: 1100px; margin: 0 auto; padding: 80px 32px;
+  text-align: center;
+}
+.features h2 {
+  font-family: "Orbitron", sans-serif; font-size: 2rem; margin: 0;
+}
+.features .sub { color: var(--muted); margin-top: 12px; }
+.grid {
+  margin-top: 48px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 24px; border-radius: 14px; text-align: left;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+  backdrop-filter: blur(6px);
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34,211,238,0.4);
+  box-shadow: 0 0 30px rgba(34,211,238,0.15);
+}
+.card h3 {
+  font-family: "Orbitron", sans-serif; margin: 0 0 8px; font-size: 1.05rem;
+}
+.card p { color: var(--muted); margin: 0; font-size: 0.95rem; line-height: 1.6; }
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 32px; text-align: center;
+}
+footer p { color: var(--muted); margin: 8px 0 0; font-size: 14px; }
+
+html { scroll-behavior: smooth; }
