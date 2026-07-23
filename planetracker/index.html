@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Exoshatter's Planetracker</title>
+<meta name="description" content="A free, live, ad-free flight map. No subscriptions, no paywalls.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Header -->
+  <header class="hud-bar">
+    <a class="brand" href="https://exoshatter.com" target="_blank" rel="noopener">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="sweep"></span>
+        <span class="dot"></span>
+      </span>
+      <span class="brand-text">
+        <span class="brand-title">Exoshatter's Planetracker</span>
+        <span class="brand-sub">live ADS&#8209;B &middot; no ads &middot; no signup</span>
+      </span>
+    </a>
+
+    <div class="hud-readout" id="hud-readout">
+      <div class="readout-item">
+        <span class="readout-label">tracked</span>
+        <span class="readout-value" id="stat-count">&mdash;</span>
+      </div>
+      <div class="readout-item">
+        <span class="readout-label">refresh</span>
+        <span class="readout-value" id="stat-refresh">8s</span>
+      </div>
+      <div class="readout-item">
+        <span class="readout-label">updated</span>
+        <span class="readout-value" id="stat-updated">&mdash;</span>
+      </div>
+    </div>
+
+    <a class="site-link" href="https://exoshatter.com" target="_blank" rel="noopener">exoshatter.com &#8594;</a>
+  </header>
+
+  <!-- Map -->
+  <main id="map"></main>
+
+  <!-- Locate / status pill -->
+  <div class="floating-controls">
+    <button id="btn-locate" class="pill-btn" title="Center on my location">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 2v3M12 19v3M22 12h-3M5 12H2"/>
+      </svg>
+      locate me
+    </button>
+    <div id="status-pill" class="status-pill">
+      <span class="status-dot"></span>
+      <span id="status-text">connecting&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Flight detail drawer -->
+  <aside id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <button id="drawer-close" class="drawer-close" aria-label="Close">&times;</button>
+
+      <div class="drawer-head">
+        <span class="drawer-eyebrow">callsign</span>
+        <h2 id="d-callsign">&mdash;</h2>
+        <span class="drawer-reg" id="d-registration"></span>
+      </div>
+
+      <div class="drawer-grid">
+        <div class="drawer-cell">
+          <span class="cell-label">altitude</span>
+          <span class="cell-value" id="d-altitude">&mdash;</span>
+        </div>
+        <div class="drawer-cell">
+          <span class="cell-label">speed</span>
+          <span class="cell-value" id="d-speed">&mdash;</span>
+        </div>
+        <div class="drawer-cell">
+          <span class="cell-label">heading</span>
+          <span class="cell-value" id="d-heading">&mdash;</span>
+        </div>
+        <div class="drawer-cell">
+          <span class="cell-label">vertical rate</span>
+          <span class="cell-value" id="d-vrate">&mdash;</span>
+        </div>
+        <div class="drawer-cell">
+          <span class="cell-label">squawk</span>
+          <span class="cell-value" id="d-squawk">&mdash;</span>
+        </div>
+        <div class="drawer-cell">
+          <span class="cell-label">aircraft</span>
+          <span class="cell-value" id="d-type">&mdash;</span>
+        </div>
+      </div>
+
+      <div class="drawer-route">
+        <div class="route-node">
+          <span class="cell-label">origin</span>
+          <span class="cell-value" id="d-origin">&mdash;</span>
+        </div>
+        <div class="route-line" aria-hidden="true">
+          <svg viewBox="0 0 100 12" width="100%" height="12"><line x1="2" y1="6" x2="98" y2="6" stroke="currentColor" stroke-dasharray="4 4" stroke-width="1.5"/><path d="M92 2 L98 6 L92 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <div class="route-node">
+          <span class="cell-label">destination</span>
+          <span class="cell-value" id="d-destination">&mdash;</span>
+        </div>
+      </div>
+
+      <div class="drawer-foot">
+        <span class="cell-label">icao24</span>
+        <span class="cell-value mono-small" id="d-icao">&mdash;</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Footer -->
+  <footer class="foot-bar">
+    <span class="foot-made">made by <a href="https://exoshatter.com" target="_blank" rel="noopener">exoshatter</a></span>
+    <span class="foot-coords" id="foot-coords">lat 0.000 &middot; lon 0.000</span>
+    <span class="foot-source">data: adsb.fi</span>
+  </footer>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="script.js"></script>
+</body>
+</html>
