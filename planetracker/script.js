@@ -105,7 +105,7 @@
     if (inFlightController) inFlightController.abort();
     inFlightController = new AbortController();
 
-    const url = `https://api.adsb.fi/v2/lat/${c.lat.toFixed(4)}/lon/${c.lng.toFixed(4)}/dist/${RADIUS_NM}`;
+    const url = `https://opendata.adsb.fi/api/v2/lat/${c.lat.toFixed(4)}/lon/${c.lng.toFixed(4)}/dist/${RADIUS_NM}`;
 
     try {
       const res = await fetch(url, { signal: inFlightController.signal });
