@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExoShatter - Gratis QR Code Generator</title>
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #0f111a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header Styling */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background-color: #16192b;
+      border-bottom: 1px solid #2a2e45;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00d2ff;
+      text-decoration: none;
+    }
+
+    .btn-back {
+      padding: 0.6rem 1.2rem;
+      background-color: transparent;
+      color: #00d2ff;
+      border: 2px solid #00d2ff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background-color: #00d2ff;
+      color: #0f111a;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background-color: #16192b;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid #2a2e45;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    p.subtitle {
+      color: #a0a5c0;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem;
+      background-color: #2a2e45;
+      border: none;
+      color: #a0a5c0;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .tab-btn.active {
+      background-color: #00d2ff;
+      color: #0f111a;
+    }
+
+    /* Input velden */
+    .input-group {
+      display: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #a0a5c0;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 6px;
+      border: 1px solid #2a2e45;
+      background-color: #0f111a;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #00d2ff;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 0.8rem;
+      background: linear-gradient(135deg, #00d2ff, #0072ff);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-generate:hover {
+      opacity: 0.9;
+    }
+
+    /* QR Resultaten */
+    .qr-result {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #qrcode {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .btn-download {
+      display: none;
+      padding: 0.6rem 1.2rem;
+      background-color: #23b26d;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #5a5f7a;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="https://exoshatter.com" class="logo">ExoShatter</a>
+    <a href="https://exoshatter.com" class="btn-back">← Terug naar ExoShatter</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <h1>QR Code Generator</h1>
+      <p class="subtitle">Maak snel en gratis een QR-code voor tekst/links of een afbeelding.</p>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('text')">Link / Tekst</button>
+        <button class="tab-btn" onclick="switchTab('image')">Afbeelding</button>
+      </div>
+
+      <!-- Veld voor Link of Tekst -->
+      <div id="text-group" class="input-group active">
+        <label for="text-input">Voer een URL of tekst in:</label>
+        <input type="text" id="text-input" placeholder="https://exoshatter.com of je tekst...">
+      </div>
+
+      <!-- Veld voor Afbeelding -->
+      <div id="image-group" class="input-group">
+        <label for="image-input">Upload een afbeelding:</label>
+        <input type="file" id="image-input" accept="image/*">
+      </div>
+
+      <button class="btn-generate" onclick="generateQR()">QR-code Maken</button>
+
+      <div class="qr-result">
+        <div id="qrcode"></div>
+        <a id="download-link" class="btn-download" download="qr-code.png">Download QR-code</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; ExoShatter - Alle rechten voorbehouden.
+  </footer>
+
+  <script>
+    let currentMode = 'text';
+
+    function switchTab(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.input-group').forEach(group => group.classList.remove('active'));
+
+      if(mode === 'text') {
+        event.target.classList.add('active');
+        document.getElementById('text-group').classList.add('active');
+      } else {
+        event.target.classList.add('active');
+        document.getElementById('image-group').classList.add('active');
+      }
+    }
+
+    function generateQR() {
+      const qrContainer = document.getElementById('qrcode');
+      const downloadBtn = document.getElementById('download-link');
+      qrContainer.innerHTML = ""; // Wis oude QR-code
+
+      let content = "";
+
+      if (currentMode === 'text') {
+        content = document.getElementById('text-input').value.trim();
+        if (!content) {
+          alert("Voer a.u.b. een link of tekst in.");
+          return;
+        }
+        createQR(content);
+      } else {
+        const fileInput = document.getElementById('image-input');
+        const file = fileInput.files[0];
+        
+        if (!file) {
+          alert("Kies a.u.b. eerst een afbeelding.");
+          return;
+        }
+
+        // Converteer afbeelding naar Base64 data-URL om op te slaan in de QR-code
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          content = e.target.result;
+          
+          // Waarschuwing als de afbeelding te groot is voor een QR-code
+          if (content.length > 2500) {
+            alert("Let op: Deze afbeelding is vrij groot. Een hele grote afbeelding past niet in een standaard QR-code. Gebruik bij voorkeur een kleine afbeelding of een link naar de afbeelding.");
+          }
+          createQR(content);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function createQR(data) {
+      const qrContainer = document.getElementById('qrcode');
+      const downloadBtn = document.getElementById('download-link');
+
+      new QRCode(qrContainer, {
+        text: data,
+        width: 200,
+        height: 200,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.M
+      });
+
+      // Maak downloadknop zichtbaar en koppel de afbeelding
+      setTimeout(() => {
+        const img = qrContainer.querySelector('img');
+        const canvas = qrContainer.querySelector('canvas');
+        
+        if (img && img.src) {
+          downloadBtn.href = img.src;
+          downloadBtn.style.display = 'inline-block';
+        } else if (canvas) {
+          downloadBtn.href = canvas.toDataURL("image/png");
+          downloadBtn.style.display = 'inline-block';
+        }
+      }, 100);
+    }
+  </script>
+</body>
+</html>
