@@ -1,6 +1,17 @@
-<?php
-require "../header.html";
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>QR Code Generator - Exoshatter</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<div id="site-header"></div>
+<script>
+fetch('/header.html').then(r => r.text()).then(html => {
+  document.getElementById('site-header').outerHTML = html;
+});
+</script>
 
 <main>
   <h1>QR Code Generator</h1>
