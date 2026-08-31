@@ -1,0 +1,91 @@
+<?php
+require "header.html";
+?>
+
+<main>
+  <h1>QR Code Generator</h1>
+  <p class="intro">Enter a link or text and turn it into a QR code. Everything happens locally in your browser, nothing is stored.</p>
+
+  <div class="box">
+    <label for="input-text">Link or text</label>
+    <textarea id="input-text" placeholder="https://exoshatter.com"></textarea>
+
+    <div class="colors">
+      <div>
+        <label for="color-dark">QR color</label>
+        <input type="color" id="color-dark" value="#000000">
+      </div>
+      <div>
+        <label for="color-light">Background</label>
+        <input type="color" id="color-light" value="#ffffff">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="btn-generate">Generate QR code</button>
+      <button id="btn-download" disabled>Download</button>
+    </div>
+    <p class="hint" id="status-hint"></p>
+
+    <div class="result" id="result" style="display:none;">
+      <div id="qr-canvas"></div>
+    </div>
+  </div>
+</main>
+
+<footer>free QR generator — exoshatter.com</footer>
+
+<script>
+(function(){
+  const inputText = document.getElementById('input-text');
+  const colorDark = document.getElementById('color-dark');
+  const colorLight = document.getElementById('color-light');
+  const btnGenerate = document.getElementById('btn-generate');
+  const btnDownload = document.getElementById('btn-download');
+  const qrContainer = document.getElementById('qr-canvas');
+  const result = document.getElementById('result');
+  const statusHint = document.getElementById('status-hint');
+
+  btnGenerate.addEventListener('click', generate);
+
+  function generate(){
+    const payload = inputText.value.trim();
+    if(!payload){
+      statusHint.textContent = 'Enter a link or text first.';
+      statusHint.classList.add('warn');
+      return;
+    }
+    statusHint.textContent = '';
+    statusHint.classList.remove('warn');
+    qrContainer.innerHTML = '';
+
+    new QRCode(qrContainer, {
+      text: payload,
+      width: 240,
+      height: 240,
+      colorDark: colorDark.value,
+      colorLight: colorLight.value,
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    result.style.display = 'block';
+    btnDownload.disabled = false;
+  }
+
+  btnDownload.addEventListener('click', () => {
+    const canvas = qrContainer.querySelector('canvas');
+    if(!canvas) return;
+    const link = document.createElement('a');
+    link.download = 'qr-code.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+
+  inputText.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && (e.metaKey || e.ctrlKey)) generate();
+  });
+})();
+</script>
+
+</body>
+</html>
